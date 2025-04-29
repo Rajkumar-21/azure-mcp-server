@@ -207,7 +207,7 @@ The MCP server exposes the following tools for Azure resource management:
 | list_resource_groups | • subscription_id (required)<br>• auth_type (required) | Lists all resource groups in a subscription | JSON array of resource groups with their details |
 | list_storage_accounts | • subscription_id (required)<br>• auth_type (required) | Lists all storage accounts in a subscription | JSON array of storage accounts with their configurations |
 | list_storage_account_usage | • subscription_id (required)<br>• resource_group_name (required)<br>• storage_account_name (required)<br>• auth_type (required) | Gets storage capacity usage for a specific account | JSON object with used capacity in GB/TiB |
-| list_storage_account_usage_all | • subscription_id (required)<br>• auth_type (required) | Gets storage capacity usage for a specific account | JSON object with used capacity in GB/TiB |
+| list_storage_account_usage_all | • subscription_id (required)<br>• auth_type (required) | Gets storage capacity usage for a all storage accounts in the subscription passed | JSON object with used capacity in GB/TiB |
 
 
 
