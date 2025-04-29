@@ -1,0 +1,22 @@
+# .dockerignore
+
+# Python virtual environment
+.venv/
+
+# Git files
+.git/
+.gitignore
+
+# Local secrets - DO NOT COPY INTO IMAGE
+.env
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE/OS files
+.vscode/
+.idea/
+*.DS_Store

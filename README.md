@@ -167,7 +167,33 @@ If you use VS Code, the GitHub Copilot Chat extension can act as an MCP Host/Cli
 * Check Connection: You might see messages about MCP servers connecting in the Output panel (select "GitHub Copilot Chat" or "MCP" from the dropdown).
 * Interact with Tools: In the Copilot Chat input, type @workspace /tools list to see if your Azure tools are listed. Then, try invoking one, e.g., @workspace /invoke list_resource_groups `subscription_id=YOUR_SUB_ID` `auth_type=default`
 
+## Use Azure MCP server as container
 
+Steps to run mcp server as container:
+Note: DefaultCredential will fail as it is not authenticated in container, recommended to use `auth_type`:`spn`
+
+```
+cd azure-mcp-server
+docker build -t mcp-azure-server:latest .
+```
+* Run the new image, passing environment variables:
+```
+docker run -d \
+  --name mcp-azure-srv \
+  -p 8000:8000 \
+  -e AZURE_TENANT_ID="YOUR_ACTUAL_TENANT_ID" \
+  -e AZURE_CLIENT_ID="YOUR_ACTUAL_SPN_CLIENT_ID" \
+  -e AZURE_CLIENT_SECRET="YOUR_ACTUAL_SPN_SECRET" \
+  mcp-azure-server:latest
+```
+* Check the logs using the command:
+`docker logs mcp-azure-srv`
+
+*  Testing SSE from VS Code / Inspector (Recap):
+   * Once the container is confirmed running correctly (check docker ps shows it Up and docker logs shows Uvicorn started without the "app not found" error):
+   * VS Code: Use the settings.json provided previously, ensuring the "url" is http://localhost:8000 and "mcp.server.transport" is "sse". Reload VS Code.
+   * MCP Inspector: Run npx @modelcontextprotocol/inspector standalone. Select SSE transport, enter URL http://localhost:8000/sse, and click Connect.
+   This detailed logging in main.py should pinpoint exactly where the import process is failing inside the container if the problem persists.
 
 
 ## Available MCP Tools
