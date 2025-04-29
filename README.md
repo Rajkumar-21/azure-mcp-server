@@ -197,6 +197,8 @@ docker run -d \
 
 
 ## Available MCP Tools
+> **Information**: This project is actively under development. The tools listed below represent the currently supported functionality. Im working on adding more tools and features to support additional Azure services and operations.
+> Stay tuned for updates and feel free to contribute to the development of new tools!
 
 The MCP server exposes the following tools for Azure resource management:
 
@@ -206,6 +208,8 @@ The MCP server exposes the following tools for Azure resource management:
 | list_storage_accounts | • subscription_id (required)<br>• auth_type (required) | Lists all storage accounts in a subscription | JSON array of storage accounts with their configurations |
 | list_storage_account_usage | • subscription_id (required)<br>• resource_group_name (required)<br>• storage_account_name (required)<br>• auth_type (required) | Gets storage capacity usage for a specific account | JSON object with used capacity in GB/TiB |
 | list_storage_account_usage_all | • subscription_id (required)<br>• auth_type (required) | Gets storage capacity usage for a specific account | JSON object with used capacity in GB/TiB |
+
+
 
 Note: For all tools, the `auth_type` parameter accepts:
 - `"default"`: Uses DefaultAzureCredential (default)
