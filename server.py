@@ -294,9 +294,9 @@ async def list_storage_account_usage_all(
 
 # --- Running the Server ---
 # Keep this commented out or remove if running via main.py/Uvicorn
-if __name__ == "__main__":
-    logger.info("Starting Azure Explorer MCP Server for stdio...")
-    mcp.run()
+# if __name__ == "__main__":
+#     logger.info("Starting Azure Explorer MCP Server for stdio...")
+#     mcp.run()
 
 
 # --- main.py (if using Uvicorn for SSE) ---

@@ -154,7 +154,7 @@ If you use VS Code, the GitHub Copilot Chat extension can act as an MCP Host/Cli
 "mcp": {
         "servers": {
                 "azure-mcp-server": {
-                "url": "http://127.0.0.1:8000/sse", // replace hostname based on the host
+                "url": "http://127.0.0.1:8080/sse", // replace hostname based on the host
                 "type": "sse"
             }
         }
