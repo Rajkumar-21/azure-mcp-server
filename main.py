@@ -60,7 +60,7 @@ except Exception as e:
 # It does NOT run when uvicorn imports 'main' as a module
 if __name__ == "__main__":
     logger.info("main.py: Running in __main__ block (direct execution)...")
-    port = int(os.getenv("PORT", 8000))
+    port = int(os.getenv("PORT", 8080))
     host = os.getenv("HOST", "127.0.0.1") # Use 0.0.0.0 for containers
 
     logger.info(f"Starting Uvicorn ASGI server via __main__ on {host}:{port}")
