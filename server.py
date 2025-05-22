@@ -1,4 +1,5 @@
 # server.py
+# server.py
 import os
 import logging
 import json
@@ -6,26 +7,25 @@ from typing import List, Optional, Dict, Any
 
 # Azure SDK Imports
 from azure.identity.aio import DefaultAzureCredential, ClientSecretCredential, ManagedIdentityCredential
-from azure.core.exceptions import HttpResponseError
+from azure.core.exceptions import HttpResponseError, ResourceNotFoundError
 
 # MCP Imports
 from mcp.server.fastmcp import FastMCP, Context
 from dotenv import load_dotenv
 
 # Import logic functions from our tools package
-from tools import resource_groups, storage_accounts
+from tools import resource_groups, storage_accounts, azure_vm # Added azure_vm
 
 # --- Basic Setup ---
 load_dotenv()
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 # --- MCP Server Instance ---
-mcp = FastMCP("AzureExplorerStructured")
-logger.info("Azure Explorer MCP Server initializing (Structured)...")
+mcp = FastMCP("Azure MCP Server") # Updated name
+logger.info("Azure MCP Server initializing (Structured + VMs)...")
 
 # --- Azure Authentication Helper ---
-# (Keep the get_azure_credential function exactly as before)
 async def get_azure_credential(auth_type: str = "default"):
     """Gets the appropriate Azure credential based on configuration."""
     logger.info(f"Attempting Azure authentication using type: {auth_type}")
@@ -54,9 +54,9 @@ async def get_azure_credential(auth_type: str = "default"):
         logger.error(f"Azure authentication failed: {e}", exc_info=True)
         raise ConnectionError(f"Failed to get Azure credentials for auth_type '{auth_type}': {e}")
 
-# --- MCP Tool Definitions (Wrappers calling logic functions) ---
-
-# list_resource_groups (Keep as before)
+# --- Existing MCP Tool Definitions (Resource Groups, Storage Accounts) ---
+# (Keep your existing list_resource_groups, list_storage_accounts, etc. tools here)
+# ... (omitted for brevity, they are in your original post)
 @mcp.tool()
 async def list_resource_groups(
     subscription_id: str,
@@ -105,7 +105,6 @@ async def list_resource_groups(
         ctx.error(f"Failed to list resource groups: {e}")
         return json.dumps({"error": f"An unexpected error occurred: {e}"})
 
-# list_storage_accounts (Keep as before)
 @mcp.tool()
 async def list_storage_accounts(
     subscription_id: str,
@@ -154,7 +153,6 @@ async def list_storage_accounts(
         ctx.error(f"Failed to list storage accounts: {e}")
         return json.dumps({"error": f"An unexpected error occurred: {e}"})
 
-# list_storage_account_usage (Keep as before)
 @mcp.tool()
 async def list_storage_account_usage(
     subscription_id: str,
@@ -202,7 +200,6 @@ async def list_storage_account_usage(
         ctx.error(f"Failed to get storage account usage: {e}")
         return json.dumps({"error": f"An unexpected error occurred: {e}"})
 
-# list_storage_account_usage_all (UPDATED)
 @mcp.tool()
 async def list_storage_account_usage_all(
     subscription_id: str,
@@ -229,54 +226,43 @@ async def list_storage_account_usage_all(
          return json.dumps({"error": error_msg})
 
     logger.info(f"Tool: Getting usage for ALL SAs in sub: {subscription_id[:4]} (auth: {effective_auth_type})")
-    # More prominent warning to the client
     ctx.info(f"Listing ALL storage accounts and usage for subscription {subscription_id[:4]}... "
              f"*** WARNING: This may take a significant amount of time. ***")
 
     try:
         credential = await get_azure_credential(effective_auth_type)
         async with credential:
-            # 1. Get all storage accounts
             sa_list = await storage_accounts.list_storage_accounts_logic(credential, subscription_id)
             total_accounts = len(sa_list)
             logger.info(f"Found {total_accounts} storage accounts. Now fetching usage for each...")
-            # Report initial progress without message
             await ctx.report_progress(0, total_accounts)
-            ctx.info(f"Found {total_accounts} SAs. Fetching usage (updates follow)...") # Separate info message
+            ctx.info(f"Found {total_accounts} SAs. Fetching usage (updates follow)...")
 
-            # 2. Iterate and get usage for each
             results_with_usage = []
             for i, account_dict in enumerate(sa_list):
                 sa_name = account_dict.get("name", "Unknown")
                 rg_name = account_dict.get("resource_group", "Unknown")
-                # Log progress to server logs
                 logger.info(f"Fetching usage for {sa_name} in {rg_name} ({i+1}/{total_accounts})")
-                # Report progress to client without message
                 await ctx.report_progress(i, total_accounts)
-                # Send separate info message to client
                 ctx.info(f"Fetching usage for {sa_name} ({i+1}/{total_accounts})...")
 
                 if sa_name != "Unknown" and rg_name != "Unknown":
                     usage_str = await storage_accounts.get_storage_account_usage_logic(
                         credential, subscription_id, rg_name, sa_name
                     )
-                    account_dict["used_capacity"] = usage_str # Add usage to the dict
+                    account_dict["used_capacity"] = usage_str
                 else:
                      account_dict["used_capacity"] = "N/A (Info Missing)"
                      ctx.warning(f"Skipping usage fetch for account index {i} due to missing name/rg.")
-
                 results_with_usage.append(account_dict)
 
             logger.info(f"Finished fetching usage for all {total_accounts} storage accounts.")
-            # Report final progress without message
             await ctx.report_progress(total_accounts, total_accounts)
-            ctx.info("Finished fetching usage for all storage accounts.") # Separate info message
+            ctx.info("Finished fetching usage for all storage accounts.")
 
             if not results_with_usage:
                 return "[]"
-
             return json.dumps(results_with_usage, indent=2)
-
     except ConnectionError as e:
          logger.error(f"Tool Auth/Connection Error: {e}", exc_info=False)
          ctx.error(f"Azure Authentication/Connection Error: {e}")

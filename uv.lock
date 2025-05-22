@@ -133,6 +133,7 @@ source = { virtual = "." }
 dependencies = [
     { name = "aiohttp" },
     { name = "azure-identity" },
+    { name = "azure-mgmt-compute" },
     { name = "azure-mgmt-monitor" },
     { name = "azure-mgmt-resource" },
     { name = "azure-mgmt-storage" },
@@ -147,6 +148,7 @@ dependencies = [
 requires-dist = [
     { name = "aiohttp", specifier = ">=3.11.18" },
     { name = "azure-identity", specifier = ">=1.21.0" },
+    { name = "azure-mgmt-compute", specifier = ">=34.1.0" },
     { name = "azure-mgmt-monitor", specifier = ">=6.0.2" },
     { name = "azure-mgmt-resource", specifier = ">=23.3.0" },
     { name = "azure-mgmt-storage", specifier = ">=22.2.0" },
@@ -155,6 +157,21 @@ requires-dist = [
     { name = "python-dotenv", specifier = ">=1.1.0" },
     { name = "starlette", specifier = ">=0.46.2" },
     { name = "uvicorn", specifier = ">=0.34.2" },
+]
+
+[[package]]
+name = "azure-mgmt-compute"
+version = "34.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "azure-common" },
+    { name = "azure-mgmt-core" },
+    { name = "isodate" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/87/30/bb941f2eee419009668305b510dfb3577604a08102b3a1d0df78d14205f3/azure_mgmt_compute-34.1.0.tar.gz", hash = "sha256:cd9d35d1cc1b8cb0bd241ad55c91b77d14e04ae73c632ada1140135f9c217fe1", size = 1797295 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/52/ba/554194c2287d7fd53257de27898f1d391090e6f2fe54f888c109c90a6592/azure_mgmt_compute-34.1.0-py3-none-any.whl", hash = "sha256:5de9c4ba12a79c69e2db3d880f93869a0a80e5c99d8232dbebf6c19b1ada3638", size = 2021492 },
 ]
 
 [[package]]

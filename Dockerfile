@@ -23,7 +23,7 @@ COPY . .
 
 # Inform Docker that the container listens on port 8000 (defined in main.py)
 # This does not publish the port, just documents it.
-EXPOSE 8000
+EXPOSE 8080
 
 # Define environment variables for Azure Authentication (placeholders)
 # --- IMPORTANT ---
@@ -39,4 +39,4 @@ EXPOSE 8000
 # Command to run the application using Uvicorn when the container starts
 # Runs the 'app' object from the 'main' module (main.py)
 # Listens on all interfaces (0.0.0.0) inside the container on port 8000
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
