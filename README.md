@@ -177,6 +177,9 @@ The MCP server exposes the following tools for Azure resource management:
 | list_storage_accounts | • subscription_id (required)<br>• auth_type (required) | Lists all storage accounts in a subscription | JSON array of storage accounts with their configurations |
 | list_storage_account_usage | • subscription_id (required)<br>• resource_group_name (required)<br>• storage_account_name (required)<br>• auth_type (required) | Gets storage capacity usage for a specific account | JSON object with used capacity in GB/TiB |
 | list_storage_account_usage_all | • subscription_id (required)<br>• auth_type (required) | Gets storage capacity usage for a specific account | JSON object with used capacity in GB/TiB |
+| get_vm_detail_by_name |• vm_name (required) •subscription_id (required)<br>• auth_type (required) | Gets vm details of the subscription | JSON object with details of vm |
+| get_vms_by_team_tag |• team_value (required) •subscription_id (required)<br>• auth_type (required) | Gets all vm details of the subscription based on the tag value | JSON object with details of vm with specific tag value |
+| trigger_vm_power_status_runbook |• vm_name_parameter (required - based on my runbook parameters) • subscription_id (required)<br>• auth_type (required)<br>•automation_resource_group_name (required)<br>• automation_account_name (required)<br>•runbook_name (required) | Gets all vm details of the subscription based on the tag value | JSON object with details of vm with specific tag value |
 
 Note: For all tools, the `auth_type` parameter accepts:
 - `"default"`: Uses DefaultAzureCredential (default)
