@@ -273,10 +273,10 @@ async def get_vms_by_team_tag(
 @mcp.tool()
 async def trigger_vm_power_status_runbook(
     vm_name_parameter: str, # Parameter for the runbook
-    subscription_id: Optional[str] = "1a08bcb1-86ce-4281-9b03-996fb455548c", # Default sub ID, can be overridden
-    automation_resource_group_name: Optional[str] = "UE2PIAC018RSG03", # RG of the Automation Account
-    automation_account_name: Optional[str] = "UE2PIAC018AAA03", # Can be overridden
-    runbook_name: Optional[str] = "VMPowerStatus", # Can be overridden
+    subscription_id: Optional[str] = "<replace subid>", # Default sub ID, can be overridden
+    automation_resource_group_name: Optional[str] = "RGName", # RG of the Automation Account
+    automation_account_name: Optional[str] = "AccountName", # Can be overridden
+    runbook_name: Optional[str] = "RunbookName", # Can be overridden
     auth_type: Optional[str] = "default",
     ctx: Context = None
 ) -> str:
